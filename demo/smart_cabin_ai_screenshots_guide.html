@@ -1,0 +1,349 @@
+
+<style>
+  h2.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+    color: var(--color-text-secondary); text-transform: uppercase;
+    margin: 1.5rem 0 0.75rem;
+  }
+  .screen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .screen-grid.two { grid-template-columns: repeat(2, 1fr); }
+  .screen-card {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    background: var(--color-background-secondary);
+  }
+  .screen-preview {
+    width: 100%; aspect-ratio: 16/9;
+    position: relative; overflow: hidden;
+  }
+  .screen-meta {
+    padding: 8px 10px;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+  }
+  .screen-filename {
+    font-size: 11px; font-weight: 500; color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .screen-desc { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 500;
+    padding: 2px 7px; border-radius: 999px; margin-top: 4px;
+  }
+  .badge-green { background: #EAF3DE; color: #3B6D11; }
+  .badge-red { background: #FCEBEB; color: #A32D2D; }
+  .badge-amber { background: #FAEEDA; color: #854F0B; }
+  .badge-blue { background: #E6F1FB; color: #185FA5; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+
+  /* --- MOCK SCREENS --- */
+
+  /* Screen 1: Normal state */
+  .s1 { background: #0a0f0a; display: flex; align-items: stretch; }
+  .s1-feed { flex: 1; background: #111; position: relative; display: flex; align-items: center; justify-content: center; }
+  .s1-feed-person { width: 40%; height: 70%; border: 2px solid #22c55e; border-radius: 3px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .s1-feed-person::after { content: 'Person · 0.94'; position: absolute; top: -18px; left: 0; font-size: 7px; color: #22c55e; font-family: monospace; }
+  .s1-person-icon { width: 18px; height: 18px; border-radius: 50%; background: #334; }
+  .s1-hud { width: 90px; background: #0d120d; padding: 5px; display: flex; flex-direction: column; gap: 3px; }
+  .hud-row { font-size: 7px; font-family: monospace; color: #6ee7b7; display: flex; justify-content: space-between; }
+  .hud-row.warn { color: #fbbf24; }
+  .hud-row.ok { color: #22c55e; }
+  .grade-a { font-size: 22px; font-weight: bold; color: #22c55e; text-align: center; margin: 4px 0; }
+  .hud-divider { border-top: 1px solid #1f2f1f; margin: 2px 0; }
+  .progress-bar { height: 3px; background: #1f2f1f; border-radius: 2px; margin-top: 1px; }
+  .progress-fill { height: 100%; border-radius: 2px; }
+
+  /* Screen 2: Heatmap */
+  .s2 { background: #0a0f0a; }
+  .s2-heatmap { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
+  .seat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 60%; }
+  .seat { border-radius: 3px; aspect-ratio: 1.4; display: flex; align-items: center; justify-content: center; font-size: 8px; font-family: monospace; color: white; font-weight: bold; }
+
+  /* Screen 3: Alert */
+  .s3 { background: #100808; }
+  .s3-alert-bar { position: absolute; top: 0; left: 0; right: 0; background: #dc2626; padding: 3px 6px; font-size: 7px; font-family: monospace; color: white; display: flex; justify-content: space-between; z-index: 2; }
+  .s3-feed { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+  .s3-box { border: 2px solid #dc2626; width: 38%; height: 65%; border-radius: 2px; display: flex; align-items: center; justify-content: center; }
+  .grade-f { font-size: 20px; font-weight: bold; color: #dc2626; font-family: monospace; position: absolute; bottom: 6px; right: 6px; }
+
+  /* Screen 4: Dashboard overview */
+  .s4 { background: #f8f9fa; padding: 5px; flex-direction: column; display: flex; gap: 4px; }
+  .s4-header { font-size: 8px; font-weight: bold; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; display: flex; justify-content: space-between; }
+  .gauge-row { display: flex; gap: 3px; }
+  .gauge-card { flex: 1; background: white; border: 0.5px solid #e2e8f0; border-radius: 4px; padding: 3px; text-align: center; }
+  .gauge-val { font-size: 11px; font-weight: bold; }
+  .gauge-lbl { font-size: 6px; color: #64748b; }
+  .risk-bar-wrap { background: white; border: 0.5px solid #e2e8f0; border-radius: 4px; padding: 4px; }
+  .risk-bar-bg { height: 5px; background: #e2e8f0; border-radius: 3px; }
+  .risk-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #22c55e, #f59e0b); width: 35%; }
+  .mini-chart { background: white; border: 0.5px solid #e2e8f0; border-radius: 4px; padding: 3px; flex: 1; }
+  .mini-svg { width: 100%; height: 24px; }
+  .charts-row { display: flex; gap: 3px; }
+
+  /* Screen 5: Thermal heatmap dashboard */
+  .s5 { background: #f8f9fa; padding: 5px; flex-direction: column; display: flex; gap: 4px; }
+  .heatmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; flex: 1; }
+  .hm-cell { border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: bold; color: white; }
+
+  /* Screen 6: Trend charts */
+  .s6 { background: #f8f9fa; padding: 5px; flex-direction: column; display: flex; gap: 4px; }
+
+  /* Screen 7: Behaviour */
+  .s7 { background: #f8f9fa; padding: 5px; flex-direction: column; display: flex; gap: 4px; }
+  .timeline { background: white; border: 0.5px solid #e2e8f0; border-radius: 4px; padding: 4px; }
+  .tl-row { display: flex; align-items: center; gap: 3px; margin-bottom: 2px; }
+  .tl-label { font-size: 6px; color: #64748b; width: 30px; }
+  .tl-bar-bg { flex: 1; height: 5px; background: #e2e8f0; border-radius: 2px; }
+  .tl-segment { height: 100%; border-radius: 2px; }
+
+  /* Screen 8: Terminal */
+  .s8 { background: #0d1117; padding: 6px; font-family: monospace; font-size: 6.5px; color: #c9d1d9; overflow: hidden; line-height: 1.6; }
+  .t-green { color: #3fb950; }
+  .t-yellow { color: #d29922; }
+  .t-red { color: #f85149; }
+  .t-blue { color: #58a6ff; }
+  .t-dim { color: #6e7681; }
+</style>
+
+<h2 class="sr-only">Smart Cabin AI — screenshots folder overview with visual mockups of each screen</h2>
+
+<p class="section-label">Live monitor — OpenCV overlay</p>
+<div class="screen-grid">
+
+  <!-- 01 Normal -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s1" style="width:100%;height:100%;display:flex;">
+        <div class="s1-feed">
+          <div style="position:absolute;top:4px;left:4px;font-size:6px;font-family:monospace;color:#6ee7b7">Smart Cabin AI v1.0</div>
+          <div class="s1-feed-person"><div class="s1-person-icon"></div></div>
+        </div>
+        <div class="s1-hud">
+          <div class="grade-a">A</div>
+          <div class="hud-divider"></div>
+          <div class="hud-row ok">Temp <span>34.2°C</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:20%;background:#22c55e"></div></div>
+          <div class="hud-row ok">CO₂ <span>612ppm</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:15%;background:#22c55e"></div></div>
+          <div class="hud-row ok">AQI <span>18</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:10%;background:#22c55e"></div></div>
+          <div class="hud-divider"></div>
+          <div class="hud-row ok">Risk <span>12/100</span></div>
+          <div class="hud-row ok">Occupants <span>1</span></div>
+          <div class="hud-row ok">Motion <span>Active</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">01_live_monitor_normal.png</div>
+      <div class="screen-desc">All sensors safe · Grade A</div>
+      <span class="badge badge-green">Safe</span>
+    </div>
+  </div>
+
+  <!-- 02 Heatmap -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div style="background:#0a0f0a;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;">
+        <div style="font-size:6px;font-family:monospace;color:#fbbf24;align-self:flex-start;">--heatmap mode</div>
+        <div class="seat-grid">
+          <div class="seat" style="background:#b91c1c;">FL 47°</div>
+          <div class="seat" style="background:#dc2626;">FR 45°</div>
+          <div class="seat" style="background:#f97316;">RL 39°</div>
+          <div class="seat" style="background:#fb923c;">RR 37°</div>
+        </div>
+        <div style="display:flex;gap:2px;margin-top:3px;">
+          <div style="height:4px;width:14px;background:#22c55e;border-radius:1px;"></div>
+          <div style="height:4px;width:14px;background:#f59e0b;"></div>
+          <div style="height:4px;width:14px;background:#f97316;"></div>
+          <div style="height:4px;width:14px;background:#dc2626;border-radius:1px;"></div>
+          <div style="font-size:6px;color:#6ee7b7;font-family:monospace;margin-left:2px;">Temp scale</div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">02_live_monitor_heatmap.png</div>
+      <div class="screen-desc">Seat-zone thermal overlay</div>
+      <span class="badge badge-amber">--heatmap flag</span>
+    </div>
+  </div>
+
+  <!-- 03 Alert -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s3" style="width:100%;height:100%;position:relative;">
+        <div class="s3-alert-bar">⚠ CRITICAL ALERT — Unattended child + 47°C <span>GRADE F</span></div>
+        <div class="s3-feed">
+          <div class="s3-box">
+            <div style="font-size:6px;color:#fca5a5;font-family:monospace;text-align:center;">CHILD DETECTED<br/>UNATTENDED 4m32s</div>
+          </div>
+          <div class="grade-f">F</div>
+        </div>
+        <div style="position:absolute;bottom:4px;left:4px;font-size:6px;font-family:monospace;color:#fca5a5;">Risk: 92/100 · SMS sent · Cooling ON</div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">03_live_monitor_alert.png</div>
+      <div class="screen-desc">Compound hazard · Grade F</div>
+      <span class="badge badge-red">Critical</span>
+    </div>
+  </div>
+</div>
+
+<p class="section-label">Streamlit analytics dashboard</p>
+<div class="screen-grid">
+
+  <!-- 04 Dashboard overview -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s4" style="width:100%;height:100%;">
+        <div class="s4-header"><span>Smart Cabin AI — Dashboard</span><span style="color:#22c55e;font-weight:bold;">● LIVE</span></div>
+        <div class="gauge-row">
+          <div class="gauge-card"><div class="gauge-val" style="color:#22c55e;">34.2°</div><div class="gauge-lbl">Temp</div></div>
+          <div class="gauge-card"><div class="gauge-val" style="color:#3b82f6;">612</div><div class="gauge-lbl">CO₂ ppm</div></div>
+          <div class="gauge-card"><div class="gauge-val" style="color:#22c55e;">62%</div><div class="gauge-lbl">Humidity</div></div>
+          <div class="gauge-card"><div class="gauge-val" style="color:#22c55e;">A</div><div class="gauge-lbl">Grade</div></div>
+        </div>
+        <div class="risk-bar-wrap">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:6px;color:#64748b;">Risk Score</span><span style="font-size:7px;font-weight:bold;">12 / 100</span></div>
+          <div class="risk-bar-bg"><div class="risk-bar-fill"></div></div>
+        </div>
+        <div class="charts-row">
+          <div class="mini-chart" style="flex:2;">
+            <div style="font-size:6px;color:#64748b;margin-bottom:2px;">Temperature trend</div>
+            <svg class="mini-svg" viewBox="0 0 100 24"><polyline points="0,20 15,18 30,17 45,15 60,16 75,14 90,12 100,11" fill="none" stroke="#f59e0b" stroke-width="1.5"/></svg>
+          </div>
+          <div class="mini-chart">
+            <div style="font-size:6px;color:#64748b;margin-bottom:2px;">CO₂</div>
+            <svg class="mini-svg" viewBox="0 0 100 24"><polyline points="0,18 20,17 40,16 60,15 80,14 100,13" fill="none" stroke="#3b82f6" stroke-width="1.5"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">04_dashboard_overview.png</div>
+      <div class="screen-desc">Live gauges + risk score</div>
+      <span class="badge badge-blue">Streamlit</span>
+    </div>
+  </div>
+
+  <!-- 05 Thermal heatmap dashboard -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s5" style="width:100%;height:100%;">
+        <div style="font-size:7px;font-weight:bold;color:#1e293b;border-bottom:1px solid #e2e8f0;padding-bottom:2px;margin-bottom:3px;">Seat-zone thermal heatmap</div>
+        <div style="flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;">
+          <div class="hm-cell" style="background:#b91c1c;aspect-ratio:1.6;">FL<br/>47°C</div>
+          <div class="hm-cell" style="background:#dc2626;aspect-ratio:1.6;">FR<br/>45°C</div>
+          <div class="hm-cell" style="background:#f97316;aspect-ratio:1.6;">RL<br/>39°C</div>
+          <div class="hm-cell" style="background:#fb923c;aspect-ratio:1.6;">RR<br/>37°C</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:3px;margin-top:4px;">
+          <span style="font-size:6px;color:#64748b;">Cool</span>
+          <div style="flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#22c55e,#f59e0b,#dc2626);"></div>
+          <span style="font-size:6px;color:#64748b;">Hot</span>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">05_dashboard_thermal_heatmap.png</div>
+      <div class="screen-desc">Seat temperature grid</div>
+      <span class="badge badge-red">High temp</span>
+    </div>
+  </div>
+
+  <!-- 06 Trend charts -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s6" style="width:100%;height:100%;">
+        <div style="font-size:7px;font-weight:bold;color:#1e293b;border-bottom:1px solid #e2e8f0;padding-bottom:2px;margin-bottom:3px;">Sensor trends — last 5 min</div>
+        <div style="background:white;border:0.5px solid #e2e8f0;border-radius:4px;padding:3px;margin-bottom:3px;">
+          <div style="font-size:6px;color:#f59e0b;margin-bottom:1px;">Temperature (°C)</div>
+          <svg width="100%" height="20" viewBox="0 0 200 20"><polyline points="0,16 30,15 60,14 90,13 120,14 150,12 180,10 200,9" fill="none" stroke="#f59e0b" stroke-width="1.5"/></svg>
+        </div>
+        <div style="background:white;border:0.5px solid #e2e8f0;border-radius:4px;padding:3px;margin-bottom:3px;">
+          <div style="font-size:6px;color:#3b82f6;margin-bottom:1px;">CO₂ (ppm)</div>
+          <svg width="100%" height="20" viewBox="0 0 200 20"><polyline points="0,14 40,13 80,12 100,11 130,12 160,10 200,8" fill="none" stroke="#3b82f6" stroke-width="1.5"/></svg>
+        </div>
+        <div style="background:white;border:0.5px solid #e2e8f0;border-radius:4px;padding:3px;">
+          <div style="font-size:6px;color:#8b5cf6;margin-bottom:1px;">AQI</div>
+          <svg width="100%" height="20" viewBox="0 0 200 20"><polyline points="0,16 50,15 90,16 120,14 150,13 180,12 200,11" fill="none" stroke="#8b5cf6" stroke-width="1.5"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">06_dashboard_trend_charts.png</div>
+      <div class="screen-desc">CO₂ / AQI / temperature over time</div>
+      <span class="badge badge-blue">Plotly charts</span>
+    </div>
+  </div>
+</div>
+
+<div class="screen-grid two" style="margin-top:0;">
+  <!-- 07 Behaviour -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s7" style="width:100%;height:100%;">
+        <div style="font-size:7px;font-weight:bold;color:#1e293b;border-bottom:1px solid #e2e8f0;padding-bottom:2px;margin-bottom:3px;">Behaviour analysis</div>
+        <div class="timeline">
+          <div style="font-size:6px;color:#64748b;margin-bottom:3px;">Motion timeline</div>
+          <div class="tl-row"><div class="tl-label">Seat 1</div><div class="tl-bar-bg"><div class="tl-segment" style="width:80%;background:#22c55e;"></div></div></div>
+          <div class="tl-row"><div class="tl-label">Seat 2</div><div class="tl-bar-bg"><div class="tl-segment" style="width:20%;background:#f59e0b;"></div></div></div>
+          <div class="tl-row"><div class="tl-label">Seat 3</div><div class="tl-bar-bg"><div class="tl-segment" style="width:0%;"></div></div></div>
+        </div>
+        <div style="background:white;border:0.5px solid #e2e8f0;border-radius:4px;padding:3px;margin-top:3px;">
+          <div style="font-size:6px;color:#64748b;margin-bottom:2px;">Distress flags</div>
+          <div style="font-size:6.5px;font-family:monospace;color:#dc2626;">⚠ Seat 2: Inactivity 4m+</div>
+          <div style="font-size:6.5px;font-family:monospace;color:#22c55e;">✓ Pose: Normal</div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">07_dashboard_behaviour.png</div>
+      <div class="screen-desc">Motion timeline + distress flags</div>
+      <span class="badge badge-amber">MediaPipe</span>
+    </div>
+  </div>
+
+  <!-- 08 Terminal -->
+  <div class="screen-card">
+    <div class="screen-preview">
+      <div class="s8" style="width:100%;height:100%;">
+        <div><span class="t-dim">$</span> <span class="t-blue">python main.py --simulate</span></div>
+        <div class="t-green">✓ Simulation mode active</div>
+        <div class="t-dim">Loading YOLOv8n model...</div>
+        <div class="t-green">✓ Model loaded (23ms)</div>
+        <div style="margin-top:3px;border-top:1px solid #21262d;padding-top:3px;">
+          <div><span class="t-blue">[FRAME 042]</span> <span class="t-green">Occupants: 1 · Child: No</span></div>
+          <div><span class="t-blue">[THERMAL]</span>  <span class="t-yellow">Temp: 38.4°C · Risk: 28</span></div>
+          <div><span class="t-blue">[ENV]</span>      CO₂: 743ppm · AQI: 22</div>
+          <div><span class="t-blue">[RISK]</span>     <span class="t-green">Score: 24/100 · Grade: B</span></div>
+        </div>
+        <div style="margin-top:3px;border-top:1px solid #21262d;padding-top:3px;">
+          <div><span class="t-blue">[FRAME 089]</span> <span class="t-yellow">Inactivity detected</span></div>
+          <div><span class="t-blue">[THERMAL]</span>  <span class="t-red">Temp: 44.1°C · Risk: 71</span></div>
+          <div><span class="t-blue">[RISK]</span>     <span class="t-red">Score: 78/100 · Grade: D</span></div>
+          <div><span class="t-red">⚠ COMPOUND HAZARD — multiplier 1.3x</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-meta">
+      <div class="screen-filename">08_simulation_mode.png</div>
+      <div class="screen-desc">Terminal output — --simulate flag</div>
+      <span class="badge badge-purple">Simulation</span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:10px 14px;display:flex;align-items:center;gap:10px;">
+  <i class="ti ti-video" style="font-size:20px;color:var(--color-text-secondary);" aria-hidden="true"></i>
+  <div>
+    <div style="font-size:13px;font-weight:500;">demo/demo_video.mp4</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">Full walkthrough · simulation start → compound hazard triggered → alert fired → dashboard analytics</div>
+  </div>
+</div>
