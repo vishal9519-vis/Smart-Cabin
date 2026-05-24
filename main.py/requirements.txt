@@ -1,0 +1,22 @@
+# Smart Cabin AI — Requirements
+# Install: pip install -r requirements.txt
+#
+# NOTE: mediapipe is OPTIONAL — the system runs without it.
+# If you want pose estimation: pip install mediapipe
+# mediapipe does NOT work on Python 3.12+ — use Python 3.10 or 3.11 if needed.
+
+opencv-python>=4.8.0
+numpy>=1.24.0
+pandas>=2.0.0
+streamlit>=1.28.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+scipy>=1.10.0
+Pillow>=9.0.0
+ultralytics>=8.1.0
+python-dotenv>=1.0.0
+streamlit-autorefresh>=1.0.1
+
+# Optional — only install if you want MediaPipe pose estimation
+# mediapipe>=0.10.0
