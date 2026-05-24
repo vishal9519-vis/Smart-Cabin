@@ -1,0 +1,2 @@
+# This file keeps the data/logs/ directory in git.
+# Actual .csv log files are gitignored.
