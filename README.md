@@ -83,12 +83,24 @@ python -m pytest tests/ -v
 
 ## Screenshots & Demo
 
-### Live Monitor (OpenCV overlay)
+### Streamlit Analytics Dashboard
 
-| Normal State | Thermal Heatmap | Critical Alert |
-|---|---|---|
-| ![Normal](screenshots/01_live_monitor_normal.png) | ![Heatmap](screenshots/02_live_monitor_heatmap.png) | ![Alert](screenshots/03_live_monitor_alert.png) |
-| Grade **A** · all sensors green | `--heatmap` flag · seat-zone colours | Grade **F** · unattended child + 47 °C |
+| Overview | Risk Score & Forecast |
+| --- | --- |
+| ![Overview](screenshots/home.png) | ![Risk](screenshots/risk_score.png) |
+| Risk gauges + safety grade | Risk over time + 30s forecast + thermal heatmap |
+
+| Event Log | System Info |
+| --- | --- |
+| ![Events](screenshots/event_log.png) | ![System](screenshots/system_info.png) |
+| Critical alerts + event table | Model info + cabin controls |
+
+| No Air Conditioning | No Ventilation |
+| --- | --- |
+| ![No AC](screenshots/no_air_conditioning.png) | ![No Vent](screenshots/no_ventilation.png) |
+| AC toggled off state | Ventilation toggled off state |
+
+---
 
 ### Streamlit Analytics Dashboard
 
