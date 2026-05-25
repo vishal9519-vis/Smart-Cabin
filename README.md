@@ -1,4 +1,9 @@
 ![Tests](https://github.com/vishal9519-vis/Smart-Cabin/actions/workflows/main.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.10-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.0.0-orange)
+![YOLOv8](https://img.shields.io/badge/YOLOv8-ultralytics-purple)
+![Streamlit](https://img.shields.io/badge/dashboard-streamlit-red)
 # Smart Cabin AI
 
 An AI-powered vehicle cabin safety and environmental risk prediction system. Monitors cabin occupancy, thermal conditions, passenger behaviour, and air quality in real time — predicting dangerous situations before they become critical.
