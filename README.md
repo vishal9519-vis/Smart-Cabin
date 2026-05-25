@@ -47,7 +47,7 @@ Camera / Video File
 ```bash
 # 1. Clone
 git clone https://github.com/vishal9519-vis/smart-cabin-ai.git
-cd smart-cabin-ai
+cd Smart-Cabin
 
 # 2. Install dependencies
 pip install -r requirements.txt
