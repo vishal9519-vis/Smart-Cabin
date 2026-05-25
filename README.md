@@ -1,3 +1,4 @@
+![Tests](https://github.com/vishal9519-vis/Smart-Cabin/actions/workflows/main.yml/badge.svg)
 # Smart Cabin AI
 
 An AI-powered vehicle cabin safety and environmental risk prediction system. Monitors cabin occupancy, thermal conditions, passenger behaviour, and air quality in real time — predicting dangerous situations before they become critical.
