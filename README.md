@@ -131,17 +131,8 @@ smart-cabin-ai/
 │   └── test_modules.py   pytest unit tests
 ├── data/
 │   └── logs/             Event logs (CSV)
-├── screenshots/
-│   ├── 01_live_monitor_normal.png       OpenCV overlay — safe state, green grade A
-│   ├── 02_live_monitor_heatmap.png      OpenCV overlay — thermal heatmap mode active
-│   ├── 03_live_monitor_alert.png        OpenCV overlay — critical alert, red grade F
-│   ├── 04_dashboard_overview.png        Streamlit home — all gauges, live risk score
-│   ├── 05_dashboard_thermal_heatmap.png Streamlit — seat-zone temperature heatmap
-│   ├── 06_dashboard_trend_charts.png    Streamlit — CO₂ / temperature / AQI trends
-│   ├── 07_dashboard_behaviour.png       Streamlit — motion timeline + distress flags
-│   └── 08_simulation_mode.png           Terminal output — --simulate flag run
 ├── demo/
-│   └── screenshots.html
+│   └── screenshots.png
 ├── main.py               OpenCV real-time entry point
 └── requirements.txt
 ```
