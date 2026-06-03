@@ -150,7 +150,7 @@ smart-cabin-ai/
 ├── data/
 │   └── logs/             Event logs (CSV)
 ├── demo/
-│   └── screenshots.png
+│   └── screenshots.png / demo video
 ├── main.py               OpenCV real-time entry point
 └── requirements.txt
 ```
